@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Eating Shop</title>
+<link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shopcss.css">
+</head>
+<body>
+<header>
+    <h1>Healthy Eating Shop</h1>
+    <nav class="navbar">
+        <a href="file:///C:/Users/rares/Desktop/coursework/homepage.html" class="active">Home</a>
+        <a href="file:///C:/Users/rares/Desktop/coursework/shop.html#">Shop</a>
+        <a href="file:///C:/Users/rares/Desktop/coursework/content_ST1.html.html">Healthy Eating Content</a>
+        <a href="#">Feedback</a>
+        <a href="#">Our Team</a>
+    </nav>
+</header>
+<main>
+  <section class="product-showcase">
+    <div class="product">
+      <img src="salmon.jpg.webp" alt="Product 1">
+      <h2>Salmon over Rice</h2>
+      <p class="price">Price: $12.99</p>
+      <p>Salmon over rice with some veggies good for retaining energy, This come premade all you have to do is heat it up.
+        500 calories.</p>
+      <button class="add-to-cart" data-id="1">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="chicken.jpg.jpg" alt="Product 2">
+      <h2>Chicken with Rice</h2>
+      <p class="price">Price: $12.99</p>
+      <p>chicken with rice high in protein and good for retaining energy throughout the day, This comes pre made all you have to do is heat up.
+        560 calories</p>
+      <button class="add-to-cart" data-id="2">Add to Cart</button>
+    </div>
+    <div class="product">
+      <img src="tuna.jpg.jpg" alt="Product 3">
+      <h2>Tuna Pasta</h2>
+      <p class="price">Price: $10.99</p>
+      <p>Tuna pasta very high in protein, This come premade all you have to do is heat it up.
+        420 calories.</p>
+      <button class="add-to-cart" data-id="3">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="shrimp.jpg.jpg" alt="Product 3">
+      <h2>Shrimp Pasta</h2>
+      <p class="price">Price: $13.99</p>
+      <p>Shrimp pasta, full of protein and highly in carbonhydartes, This come premade all you have to do is heat it up.
+        620 calories.</p>
+      <button class="add-to-cart" data-id="3">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="vege.jpg.jpeg" alt="Product 3">
+      <h2>Burito Bowl</h2>
+      <p class="price">Price: $14.59</p>
+      <p>Vegetarian Burito Bowl, its very filling and it will give you a energy boos through out the day, This come premade all you have to do is heat it up.
+        720 calories.</p>
+      <button class="add-to-cart" data-id="3">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="cleanse.jpg.webp" alt="Product 3">
+      <h2>24 Cleanisng Bottles</h2>
+      <p class="price">Price: $80.99</p>
+      <p>This is 12 cleansing juice for 2 weeks, you get 24 bottles of cleanse juice in the span of two weeks this is used to get rid of the toxin in your body. </p>
+      <button class="add-to-cart" data-id="3">Add to Cart</button>
+    </div>
+  </section>
+</main>
+<aside class="order-summary">
+    <h2>Order Summary</h2>
+    <div class="cart">
+        <!-- Cart items will be dynamically added here -->
+    </div>
+    <div class="checkout-summary">
+        <p>Total: <span id="total">$0.00</span></p>
+        <button id="checkout-btn" disabled>Proceed to Checkout</button>
+        <p class="validation-msg" style="display: none;">Please select at least one product.</p>
+    </div>
+</aside>
+<footer>
+    <p>&copy; 2024 Healthy Eating Shop</p>
+</footer>
+
+<script>
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    const cartContainer = document.querySelector('.cart');
+    const totalSpan = document.getElementById('total');
+    const checkoutButton = document.getElementById('checkout-btn');
+    const validationMsg = document.querySelector('.validation-msg');
+
+    let cart = [];
+    let total = 0;
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-id');
+            const product = {
+                id: productId,
+                name: button.parentElement.querySelector('h2').innerText,
+                price: parseFloat(button.parentElement.querySelector('.price').innerText.split('$')[1])
+            };
+            cart.push(product);
+            updateCart();
+            updateTotal(); // Update total after adding item to cart
+            updateCheckoutButton();
+        });
+    });
+
+    function updateCart() {
+        cartContainer.innerHTML = '';
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.innerHTML = `<p>${item.name} - $${item.price.toFixed(2)}</p>`;
+            cartContainer.appendChild(cartItem);
+        });
+    }
+
+    function updateTotal() {
+        total = cart.reduce((acc, curr) => acc + curr.price, 0);
+        totalSpan.innerText = `$${total.toFixed(2)}`;
+    }
+
+    function updateCheckoutButton() {
+        if (cart.length > 0) {
+            checkoutButton.removeAttribute('disabled');
+            validationMsg.style.display = 'none';
+        } else {
+            checkoutButton.setAttribute('disabled', true);
+            validationMsg.style.display = 'block';
+        }
+    }
+
+    checkoutButton.addEventListener('click', () => {
+        if (cart.length > 0) {
+            window.location.href = 'file:///C:/Users/rares/Desktop/coursework/checkout.html';
+        }
+    });
+</script>
+
+<script>
+    // Function to add an item to the cart
+    function addToCart(itemName, itemPrice) {
+        // Retrieve existing cart items from local storage
+        var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Add the new item to the cart
+        var newItem = { name: itemName, price: itemPrice };
+        cartItems.push(newItem);
+        
+        // Save the updated cart items back to local storage
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        
+        // Alert the user that the item has been added to the cart
+        alert('Item added to cart: ' + itemName);
+    }
+</script>
+
+</body>
+</html>
